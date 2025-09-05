@@ -3,6 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
+import { CreatePurchaseOrderForm } from "@/components/forms/CreatePurchaseOrderForm"
+import { toast } from "@/components/ui/sonner"
 import { 
   Plus, 
   Search, 
@@ -29,6 +31,7 @@ import {
 
 export default function PurchaseOrders() {
   const [searchTerm, setSearchTerm] = useState("")
+  const [showCreateForm, setShowCreateForm] = useState(false)
   
   const purchaseOrders = [
     {
@@ -115,6 +118,11 @@ export default function PurchaseOrders() {
     }
   }
 
+  const handleStatusChange = (orderId: string, newStatus: string) => {
+    toast.success(`Purchase order ${orderId} ${newStatus}`, {
+      description: `Status updated successfully.`
+    })
+  }
   const statusCounts = {
     draft: purchaseOrders.filter(po => po.status === "draft").length,
     pending: purchaseOrders.filter(po => po.status === "pending").length,
@@ -132,7 +140,7 @@ export default function PurchaseOrders() {
           <h1 className="text-3xl font-bold text-foreground">Purchase Orders</h1>
           <p className="text-muted-foreground">Create and manage purchase orders for your suppliers</p>
         </div>
-        <Button className="bg-primary hover:bg-primary/90">
+        <Button className="bg-primary hover:bg-primary/90" onClick={() => setShowCreateForm(true)}>
           <Plus className="w-4 h-4 mr-2" />
           Create Purchase Order
         </Button>
@@ -284,18 +292,26 @@ export default function PurchaseOrders() {
                         <DropdownMenuItem>Edit Order</DropdownMenuItem>
                         <DropdownMenuItem>Print/Export</DropdownMenuItem>
                         {order.status === "draft" && (
-                          <DropdownMenuItem>Submit for Approval</DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handleStatusChange(order.id, "submitted for approval")}>
+                            Submit for Approval
+                          </DropdownMenuItem>
                         )}
                         {order.status === "pending" && (
                           <>
-                            <DropdownMenuItem className="text-success">Approve</DropdownMenuItem>
-                            <DropdownMenuItem className="text-destructive">Reject</DropdownMenuItem>
+                            <DropdownMenuItem className="text-success" onClick={() => handleStatusChange(order.id, "approved")}>
+                              Approve
+                            </DropdownMenuItem>
+                            <DropdownMenuItem className="text-destructive" onClick={() => handleStatusChange(order.id, "rejected")}>
+                              Reject
+                            </DropdownMenuItem>
                           </>
                         )}
                         {order.status === "approved" && (
-                          <DropdownMenuItem>Mark as Received</DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handleStatusChange(order.id, "marked as received")}>
+                            Mark as Received
+                          </DropdownMenuItem>
                         )}
-                        <DropdownMenuItem className="text-destructive">
+                        <DropdownMenuItem className="text-destructive" onClick={() => handleStatusChange(order.id, "cancelled")}>
                           Cancel Order
                         </DropdownMenuItem>
                       </DropdownMenuContent>
@@ -307,6 +323,15 @@ export default function PurchaseOrders() {
           </Table>
         </CardContent>
       </Card>
+
+      <CreatePurchaseOrderForm 
+        open={showCreateForm} 
+        onOpenChange={setShowCreateForm}
+        onOrderCreated={() => {
+          // In a real app, this would refresh the purchase orders list
+          console.log("Purchase order created, refreshing list...")
+        }}
+      />
     </div>
   )
 }

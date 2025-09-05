@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
+import { AddSupplierForm } from "@/components/forms/AddSupplierForm"
 import { 
   Plus, 
   Search, 
@@ -30,6 +31,7 @@ import {
 
 export default function Suppliers() {
   const [searchTerm, setSearchTerm] = useState("")
+  const [showAddForm, setShowAddForm] = useState(false)
   
   const suppliers = [
     {
@@ -114,7 +116,7 @@ export default function Suppliers() {
           <h1 className="text-3xl font-bold text-foreground">Suppliers</h1>
           <p className="text-muted-foreground">Manage your supplier relationships and vendor information</p>
         </div>
-        <Button className="bg-primary hover:bg-primary/90">
+        <Button className="bg-primary hover:bg-primary/90" onClick={() => setShowAddForm(true)}>
           <Plus className="w-4 h-4 mr-2" />
           Add Supplier
         </Button>
@@ -263,6 +265,15 @@ export default function Suppliers() {
           </Table>
         </CardContent>
       </Card>
+
+      <AddSupplierForm 
+        open={showAddForm} 
+        onOpenChange={setShowAddForm}
+        onSupplierAdded={() => {
+          // In a real app, this would refresh the suppliers list
+          console.log("Supplier added, refreshing list...")
+        }}
+      />
     </div>
   )
 }

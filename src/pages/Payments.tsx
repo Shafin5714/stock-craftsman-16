@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
+import { RecordPaymentForm } from "@/components/forms/RecordPaymentForm"
 import { 
   Plus, 
   Search, 
@@ -38,6 +39,7 @@ import {
 export default function Payments() {
   const [searchTerm, setSearchTerm] = useState("")
   const [activeTab, setActiveTab] = useState("invoices")
+  const [showRecordPaymentForm, setShowRecordPaymentForm] = useState(false)
   
   const invoices = [
     {
@@ -188,7 +190,7 @@ export default function Payments() {
             <Calendar className="w-4 h-4 mr-2" />
             Payment Schedule
           </Button>
-          <Button className="bg-primary hover:bg-primary/90">
+          <Button className="bg-primary hover:bg-primary/90" onClick={() => setShowRecordPaymentForm(true)}>
             <Plus className="w-4 h-4 mr-2" />
             Record Payment
           </Button>
@@ -337,7 +339,7 @@ export default function Payments() {
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end" className="bg-popover">
                               <DropdownMenuItem>View Invoice</DropdownMenuItem>
-                              <DropdownMenuItem>Record Payment</DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => setShowRecordPaymentForm(true)}>Record Payment</DropdownMenuItem>
                               <DropdownMenuItem>Payment History</DropdownMenuItem>
                               <DropdownMenuItem>Send Reminder</DropdownMenuItem>
                               <DropdownMenuItem>Generate Statement</DropdownMenuItem>
@@ -445,6 +447,15 @@ export default function Payments() {
           </Card>
         </TabsContent>
       </Tabs>
+
+      <RecordPaymentForm 
+        open={showRecordPaymentForm} 
+        onOpenChange={setShowRecordPaymentForm}
+        onPaymentRecorded={() => {
+          // In a real app, this would refresh the payments list
+          console.log("Payment recorded, refreshing list...")
+        }}
+      />
     </div>
   )
 }

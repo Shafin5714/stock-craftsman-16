@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
+import { AddProductForm } from "@/components/forms/AddProductForm"
 import { 
   Plus, 
   Search, 
@@ -29,6 +30,7 @@ import {
 
 export default function Products() {
   const [searchTerm, setSearchTerm] = useState("")
+  const [showAddForm, setShowAddForm] = useState(false)
   
   const products = [
     {
@@ -139,7 +141,7 @@ export default function Products() {
           <h1 className="text-3xl font-bold text-foreground">Products</h1>
           <p className="text-muted-foreground">Manage your product catalog and inventory levels</p>
         </div>
-        <Button className="bg-primary hover:bg-primary/90">
+        <Button className="bg-primary hover:bg-primary/90" onClick={() => setShowAddForm(true)}>
           <Plus className="w-4 h-4 mr-2" />
           Add Product
         </Button>
@@ -317,6 +319,15 @@ export default function Products() {
           </CardContent>
         </Card>
       </div>
+
+      <AddProductForm 
+        open={showAddForm} 
+        onOpenChange={setShowAddForm}
+        onProductAdded={() => {
+          // In a real app, this would refresh the products list
+          console.log("Product added, refreshing list...")
+        }}
+      />
     </div>
   )
 }

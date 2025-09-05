@@ -1,6 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { toast } from "@/components/ui/sonner"
+import { useNavigate } from "react-router-dom"
 import { 
   ShoppingCart, 
   Package, 
@@ -12,6 +14,8 @@ import {
 } from "lucide-react"
 
 export default function Dashboard() {
+  const navigate = useNavigate()
+
   const stats = [
     {
       title: "Total Suppliers",
@@ -66,6 +70,38 @@ export default function Dashboard() {
     }
   }
 
+  const handleQuickAction = (action: string) => {
+    switch (action) {
+      case "create-po":
+        navigate("/purchase-orders")
+        toast.success("Redirected to Purchase Orders", {
+          description: "Click 'Create Purchase Order' to get started."
+        })
+        break
+      case "add-product":
+        navigate("/products")
+        toast.success("Redirected to Products", {
+          description: "Click 'Add Product' to add a new item."
+        })
+        break
+      case "add-supplier":
+        navigate("/suppliers")
+        toast.success("Redirected to Suppliers", {
+          description: "Click 'Add Supplier' to add a new vendor."
+        })
+        break
+      case "record-payment":
+        navigate("/payments")
+        toast.success("Redirected to Payments", {
+          description: "Click 'Record Payment' to log a payment."
+        })
+        break
+      default:
+        toast.info("Quick action selected", {
+          description: `${action} functionality coming soon!`
+        })
+    }
+  }
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -74,10 +110,40 @@ export default function Dashboard() {
           <h1 className="text-3xl font-bold text-foreground">Dashboard</h1>
           <p className="text-muted-foreground">Overview of your purchase and inventory operations</p>
         </div>
-        <Button className="bg-primary hover:bg-primary/90">
-          <Plus className="w-4 h-4 mr-2" />
-          Quick Actions
-        </Button>
+        <div className="relative group">
+          <Button className="bg-primary hover:bg-primary/90">
+            <Plus className="w-4 h-4 mr-2" />
+            Quick Actions
+          </Button>
+          <div className="absolute right-0 top-full mt-2 w-48 bg-popover border rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
+            <div className="p-2 space-y-1">
+              <button 
+                onClick={() => handleQuickAction("create-po")}
+                className="w-full text-left px-3 py-2 text-sm hover:bg-accent rounded-md transition-colors"
+              >
+                Create Purchase Order
+              </button>
+              <button 
+                onClick={() => handleQuickAction("add-product")}
+                className="w-full text-left px-3 py-2 text-sm hover:bg-accent rounded-md transition-colors"
+              >
+                Add Product
+              </button>
+              <button 
+                onClick={() => handleQuickAction("add-supplier")}
+                className="w-full text-left px-3 py-2 text-sm hover:bg-accent rounded-md transition-colors"
+              >
+                Add Supplier
+              </button>
+              <button 
+                onClick={() => handleQuickAction("record-payment")}
+                className="w-full text-left px-3 py-2 text-sm hover:bg-accent rounded-md transition-colors"
+              >
+                Record Payment
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Stats Cards */}
@@ -107,7 +173,9 @@ export default function Dashboard() {
           <CardHeader>
             <CardTitle className="flex items-center justify-between">
               Recent Purchase Orders
-              <Button variant="outline" size="sm">View All</Button>
+              <Button variant="outline" size="sm" onClick={() => navigate("/purchase-orders")}>
+                View All
+              </Button>
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -141,7 +209,9 @@ export default function Dashboard() {
                 <AlertTriangle className="w-5 h-5 text-warning" />
                 Low Stock Alerts
               </span>
-              <Button variant="outline" size="sm">Manage</Button>
+              <Button variant="outline" size="sm" onClick={() => navigate("/inventory")}>
+                Manage
+              </Button>
             </CardTitle>
           </CardHeader>
           <CardContent>
