@@ -1,8 +1,9 @@
 import { ReactNode } from "react"
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import { AppSidebar } from "@/components/AppSidebar"
+import { ProfileDropdown } from "@/components/ProfileDropdown"
 import { Button } from "@/components/ui/button"
-import { Bell, Search, User } from "lucide-react"
+import { Bell, Search } from "lucide-react"
 
 interface DashboardLayoutProps {
   children: ReactNode
@@ -33,9 +34,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               <Button variant="ghost" size="icon">
                 <Bell className="h-4 w-4" />
               </Button>
-              <Button variant="ghost" size="icon">
-                <User className="h-4 w-4" />
-              </Button>
+              <ProfileDropdown />
             </div>
           </header>
 
