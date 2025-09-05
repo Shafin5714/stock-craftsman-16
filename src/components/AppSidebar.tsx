@@ -1,4 +1,4 @@
-import { NavLink, useLocation } from "react-router-dom"
+import { NavLink, useLocation } from "react-router-dom";
 import {
   Package,
   Users,
@@ -7,8 +7,8 @@ import {
   FileText,
   Truck,
   DollarSign,
-  Settings
-} from "lucide-react"
+  Settings,
+} from "lucide-react";
 
 import {
   Sidebar,
@@ -20,7 +20,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar";
 
 const menuItems = [
   { title: "Dashboard", url: "/", icon: BarChart3 },
@@ -30,30 +30,32 @@ const menuItems = [
   { title: "Inventory", url: "/inventory", icon: Truck },
   { title: "Payments", url: "/payments", icon: DollarSign },
   { title: "Reports", url: "/reports", icon: FileText },
-]
+];
 
 export function AppSidebar() {
-  const { state } = useSidebar()
-  const location = useLocation()
-  const currentPath = location.pathname
-  const isCollapsed = state === "collapsed"
+  const { state } = useSidebar();
+  const location = useLocation();
+  const currentPath = location.pathname;
+  const isCollapsed = state === "collapsed";
 
   const isActive = (path: string) => {
-    if (path === "/") return currentPath === "/"
-    return currentPath.startsWith(path)
-  }
+    if (path === "/") return currentPath === "/";
+    return currentPath.startsWith(path);
+  };
 
   const getNavCls = (path: string) =>
-    isActive(path) 
-      ? "bg-primary text-primary-foreground font-medium" 
-      : "hover:bg-accent hover:text-accent-foreground"
+    isActive(path)
+      ? "bg-primary text-primary-foreground font-medium"
+      : "hover:bg-accent hover:text-accent-foreground";
 
   return (
     <Sidebar collapsible="icon">
       <SidebarContent>
         <div className="p-4 border-b">
-          <h2 className={`font-bold text-lg ${isCollapsed ? "hidden" : "block"}`}>
-            PurchaseFlow
+          <h2
+            className={`font-bold text-lg ${isCollapsed ? "hidden" : "block"}`}
+          >
+            ERP
           </h2>
           {isCollapsed && (
             <div className="w-8 h-8 bg-primary rounded flex items-center justify-center">
@@ -98,5 +100,5 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
     </Sidebar>
-  )
+  );
 }
