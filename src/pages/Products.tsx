@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -29,6 +30,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 
 export default function Products() {
+  const navigate = useNavigate()
   const [searchTerm, setSearchTerm] = useState("")
   const [showAddForm, setShowAddForm] = useState(false)
   
@@ -301,9 +303,15 @@ export default function Products() {
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end" className="bg-popover">
-                            <DropdownMenuItem>View Details</DropdownMenuItem>
-                            <DropdownMenuItem>Edit Product</DropdownMenuItem>
-                            <DropdownMenuItem>Adjust Stock</DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => navigate(`/products/${product.id}`)}>
+                              View Details
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => navigate(`/products/${product.id}/edit`)}>
+                              Edit Product
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => navigate(`/products/${product.id}/adjust-stock`)}>
+                              Adjust Stock
+                            </DropdownMenuItem>
                             <DropdownMenuItem>Create PO</DropdownMenuItem>
                             <DropdownMenuItem className="text-destructive">
                               Discontinue
