@@ -26,6 +26,8 @@ import AdjustStock from "./pages/AdjustStock";
 import PurchaseOrderDetails from "./pages/PurchaseOrderDetails";
 import EditPurchaseOrder from "./pages/EditPurchaseOrder";
 import ReceiveGoods from "./pages/ReceiveGoods";
+import InventoryDetails from "./pages/InventoryDetails";
+import EditInventory from "./pages/EditInventory";
 
 const queryClient = new QueryClient();
 
@@ -53,6 +55,9 @@ const App = () => (
           <Route path="/purchase-orders/:id/edit" element={<DashboardLayout><EditPurchaseOrder /></DashboardLayout>} />
           <Route path="/purchase-orders/:id/receive" element={<DashboardLayout><ReceiveGoods /></DashboardLayout>} />
           <Route path="/inventory" element={<DashboardLayout><Inventory /></DashboardLayout>} />
+          <Route path="/inventory/:id" element={<DashboardLayout><InventoryDetails /></DashboardLayout>} />
+          <Route path="/inventory/:id/edit" element={<DashboardLayout><EditInventory /></DashboardLayout>} />
+          <Route path="/inventory/:id/adjust" element={<DashboardLayout><AdjustStock /></DashboardLayout>} />
           <Route path="/payments" element={<DashboardLayout><Payments /></DashboardLayout>} />
           <Route path="/reports" element={<DashboardLayout><Reports /></DashboardLayout>} />
           <Route path="/settings" element={<DashboardLayout><Settings /></DashboardLayout>} />

@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -36,6 +37,7 @@ import {
 } from "@/components/ui/tabs"
 
 export default function Inventory() {
+  const navigate = useNavigate()
   const [searchTerm, setSearchTerm] = useState("")
   const [activeTab, setActiveTab] = useState("overview")
   
@@ -341,8 +343,15 @@ export default function Inventory() {
                               </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end" className="bg-popover">
-                              <DropdownMenuItem>View History</DropdownMenuItem>
-                              <DropdownMenuItem>Adjust Stock</DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => navigate(`/inventory/${item.id}`)}>
+                                View Details
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => navigate(`/inventory/${item.id}/edit`)}>
+                                Edit Item
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => navigate(`/inventory/${item.id}/adjust`)}>
+                                Adjust Stock
+                              </DropdownMenuItem>
                               <DropdownMenuItem>Reserve Stock</DropdownMenuItem>
                               <DropdownMenuItem>Transfer Location</DropdownMenuItem>
                               <DropdownMenuItem>Create PO</DropdownMenuItem>
