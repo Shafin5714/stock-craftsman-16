@@ -10,6 +10,9 @@ import Categories from "./pages/Categories";
 import Profile from "./pages/Profile";
 import Dashboard from "./pages/Dashboard";
 import Suppliers from "./pages/Suppliers";
+import SupplierDetails from "./pages/SupplierDetails";
+import EditSupplier from "./pages/EditSupplier";
+import SupplierOrders from "./pages/SupplierOrders";
 import Products from "./pages/Products";
 import PurchaseOrders from "./pages/PurchaseOrders";
 import Inventory from "./pages/Inventory";
@@ -32,6 +35,9 @@ const App = () => (
           <Route path="/categories" element={<DashboardLayout><Categories /></DashboardLayout>} />
           <Route path="/profile" element={<DashboardLayout><Profile /></DashboardLayout>} />
           <Route path="/suppliers" element={<DashboardLayout><Suppliers /></DashboardLayout>} />
+          <Route path="/suppliers/:id" element={<DashboardLayout><SupplierDetails /></DashboardLayout>} />
+          <Route path="/suppliers/:id/edit" element={<DashboardLayout><EditSupplier /></DashboardLayout>} />
+          <Route path="/suppliers/:id/orders" element={<DashboardLayout><SupplierOrders /></DashboardLayout>} />
           <Route path="/products" element={<DashboardLayout><Products /></DashboardLayout>} />
           <Route path="/purchase-orders" element={<DashboardLayout><PurchaseOrders /></DashboardLayout>} />
           <Route path="/inventory" element={<DashboardLayout><Inventory /></DashboardLayout>} />

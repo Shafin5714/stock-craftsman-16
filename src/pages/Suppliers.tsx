@@ -250,9 +250,15 @@ export default function Suppliers() {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end" className="bg-popover">
-                        <DropdownMenuItem>View Details</DropdownMenuItem>
-                        <DropdownMenuItem>Edit Supplier</DropdownMenuItem>
-                        <DropdownMenuItem>View Orders</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => window.location.href = `/suppliers/${supplier.id}`}>
+                          View Details
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => window.location.href = `/suppliers/${supplier.id}/edit`}>
+                          Edit Supplier
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => window.location.href = `/suppliers/${supplier.id}/orders`}>
+                          View Orders
+                        </DropdownMenuItem>
                         <DropdownMenuItem className="text-destructive">
                           Deactivate
                         </DropdownMenuItem>
