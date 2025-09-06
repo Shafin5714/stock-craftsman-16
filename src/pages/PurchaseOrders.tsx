@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -30,6 +31,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 
 export default function PurchaseOrders() {
+  const navigate = useNavigate()
   const [searchTerm, setSearchTerm] = useState("")
   const [showCreateForm, setShowCreateForm] = useState(false)
   
@@ -288,8 +290,17 @@ export default function PurchaseOrders() {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end" className="bg-popover">
-                        <DropdownMenuItem>View Details</DropdownMenuItem>
-                        <DropdownMenuItem>Edit Order</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => navigate(`/purchase-orders/${order.id}`)}>
+                          View Details
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => navigate(`/purchase-orders/${order.id}/edit`)}>
+                          Edit Order
+                        </DropdownMenuItem>
+                        {(order.status === "approved" || order.status === "partially-received") && (
+                          <DropdownMenuItem onClick={() => navigate(`/purchase-orders/${order.id}/receive`)}>
+                            Receive Goods
+                          </DropdownMenuItem>
+                        )}
                         <DropdownMenuItem>Print/Export</DropdownMenuItem>
                         {order.status === "draft" && (
                           <DropdownMenuItem onClick={() => handleStatusChange(order.id, "submitted for approval")}>
