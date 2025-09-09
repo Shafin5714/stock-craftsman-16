@@ -9,6 +9,7 @@ import Login from "./pages/Login";
 import Categories from "./pages/Categories";
 import Profile from "./pages/Profile";
 import Dashboard from "./pages/Dashboard";
+import POSManager from "./pages/POSManager";
 import Suppliers from "./pages/Suppliers";
 import SupplierDetails from "./pages/SupplierDetails";
 import EditSupplier from "./pages/EditSupplier";
@@ -44,6 +45,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/pos-manager" element={<DashboardLayout><POSManager /></DashboardLayout>} />
           <Route path="/categories" element={<DashboardLayout><Categories /></DashboardLayout>} />
           <Route path="/profile" element={<DashboardLayout><Profile /></DashboardLayout>} />
           <Route path="/suppliers" element={<DashboardLayout><Suppliers /></DashboardLayout>} />
