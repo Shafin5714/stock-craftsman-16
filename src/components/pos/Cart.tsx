@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 import {
   Dialog,
   DialogContent,
@@ -31,7 +32,25 @@ import {
   Receipt,
   Search,
   X,
+  CheckIcon,
+  ChevronsUpDownIcon,
 } from "lucide-react";
+
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import { useState } from "react";
+
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 interface CartItem {
   id: string;
@@ -65,6 +84,21 @@ interface CartProps {
   onAddCustomer: (customer: Omit<Customer, "id">) => Promise<Customer>;
 }
 
+const demoCustomers = [
+  {
+    value: "Walk-in Customer",
+    label: "Walk-in Customer",
+  },
+  {
+    value: "John Doe",
+    label: "John Doe",
+  },
+  {
+    value: "Jane Doe",
+    label: "Jane Doe",
+  },
+];
+
 export function Cart({
   cart,
   customers,
@@ -84,6 +118,18 @@ export function Cart({
   const tax = subtotal * 0.1; // 10% tax
   const total = subtotal + tax;
 
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState("Walk-in Customer");
+  const [formData, setFormData] = useState({
+    name: "",
+    phone: "",
+    email: "",
+    address: "",
+  });
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+
+  const handleAddCustomer = () => {};
+
   return (
     <Card>
       <CardHeader>
@@ -101,81 +147,155 @@ export function Cart({
       </CardHeader>
       <CardContent className="space-y-4">
         {/* Customer and Date Section */}
-        <div className="grid  grid-cols-3 gap-10">
+        <div className="grid grid-cols-3 gap-10">
           <div className="col-span-2">
             <Label className="text-sm font-medium">Customer</Label>
             <div className="flex flex-col gap-2">
-              <div className="flex gap-2 items-center">
-                <div className="relative flex-1">
-                  <Search className="absolute left-2.5 top-3 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    type="search"
-                    placeholder="Search customers..."
-                    className="pl-8"
-                  />
+              <div className="flex gap-3 items-center justify-start">
+                <div className="flex  ">
+                  <Popover open={open} onOpenChange={setOpen}>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        role="combobox"
+                        aria-expanded={open}
+                        className="justify-between w-[300px]"
+                      >
+                        {value
+                          ? demoCustomers.find(
+                              (customer) => customer.value === value
+                            )?.label
+                          : "Search Customer..."}
+                        <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-[300px]">
+                      <Command>
+                        <CommandInput placeholder="Search Customers..." />
+                        <CommandList>
+                          <CommandEmpty>No Customer found.</CommandEmpty>
+                          <CommandGroup>
+                            {demoCustomers.map((customer) => (
+                              <CommandItem
+                                key={customer.value}
+                                value={customer.value}
+                                onSelect={(currentValue) => {
+                                  setValue(
+                                    currentValue === value ? "" : currentValue
+                                  );
+                                  setOpen(false);
+                                }}
+                              >
+                                <CheckIcon
+                                  className={cn(
+                                    "mr-2 h-4 w-4",
+                                    value === customer.value
+                                      ? "opacity-100"
+                                      : "opacity-0"
+                                  )}
+                                />
+                                {customer.label}
+                              </CommandItem>
+                            ))}
+                          </CommandGroup>
+                        </CommandList>
+                      </Command>
+                    </PopoverContent>
+                  </Popover>
                 </div>
-                <Dialog>
+
+                <Dialog
+                  open={isAddDialogOpen}
+                  onOpenChange={setIsAddDialogOpen}
+                >
                   <DialogTrigger asChild>
-                    <Button variant="outline" size="sm" className="gap-1">
-                      <Plus className="h-4 w-4" /> Add
+                    <Button>
+                      <Plus className="w-4 h-4 mr-2" />
+                      Add
                     </Button>
                   </DialogTrigger>
                   <DialogContent>
                     <DialogHeader>
                       <DialogTitle>Add New Customer</DialogTitle>
                     </DialogHeader>
-                    <div className="grid gap-4 py-4">
-                      <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="name" className="text-right">
-                          Name *
-                        </Label>
+                    <div className="space-y-4">
+                      <div>
+                        <Label htmlFor="name">Name *</Label>
                         <Input
                           id="name"
-                          className="col-span-3"
-                          placeholder="John Doe"
+                          value={formData.name}
+                          onChange={(e) =>
+                            setFormData((prev) => ({
+                              ...prev,
+                              name: e.target.value,
+                            }))
+                          }
+                          placeholder="Enter customer name"
                         />
                       </div>
-                      <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="email" className="text-right">
-                          Email
-                        </Label>
-                        <Input
-                          id="email"
-                          type="email"
-                          className="col-span-3"
-                          placeholder="john@example.com"
-                        />
-                      </div>
-                      <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="phone" className="text-right">
-                          Phone
-                        </Label>
+                      <div>
+                        <Label htmlFor="phone">Phone *</Label>
                         <Input
                           id="phone"
-                          className="col-span-3"
+                          value={formData.phone}
+                          onChange={(e) =>
+                            setFormData((prev) => ({
+                              ...prev,
+                              phone: e.target.value,
+                            }))
+                          }
                           placeholder="+1234567890"
                         />
                       </div>
+                      <div>
+                        <Label htmlFor="email">Email</Label>
+                        <Input
+                          id="email"
+                          type="email"
+                          value={formData.email}
+                          onChange={(e) =>
+                            setFormData((prev) => ({
+                              ...prev,
+                              email: e.target.value,
+                            }))
+                          }
+                          placeholder="customer@example.com"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="address">Address</Label>
+                        <Input
+                          id="address"
+                          value={formData.address}
+                          onChange={(e) =>
+                            setFormData((prev) => ({
+                              ...prev,
+                              address: e.target.value,
+                            }))
+                          }
+                          placeholder="123 Main St, City, State"
+                        />
+                      </div>
+                      <div className="flex gap-2 pt-4">
+                        <Button onClick={handleAddCustomer} className="flex-1">
+                          Add Customer
+                        </Button>
+                        <Button
+                          variant="outline"
+                          onClick={() => setIsAddDialogOpen(false)}
+                        >
+                          Cancel
+                        </Button>
+                      </div>
                     </div>
-                    <DialogFooter>
-                      <Button type="submit">Add Customer</Button>
-                    </DialogFooter>
                   </DialogContent>
                 </Dialog>
-                <Button
-                  variant={selectedCustomer?.isWalkIn ? "default" : "outline"}
-                  size="sm"
-                  className="gap-1"
-                >
-                  <User className="h-4 w-4" />
-                  Walk-in
-                </Button>
               </div>
             </div>
           </div>
 
           <div className="col-span-1">
-            <div className="w-[70%] ml-auto">
+            <div className="w-[80%] ml-auto">
               <Label className="text-sm font-medium">Date</Label>
               <Input
                 type="date"
