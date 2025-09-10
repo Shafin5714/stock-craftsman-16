@@ -111,8 +111,6 @@ export function Cart({
                     <th className="p-2 text-xs font-medium">Price</th>
                     <th className="p-2 text-xs font-medium">Discount</th>
                     <th className="p-2 text-xs font-medium">Amount</th>
-                    <th className="p-2 text-xs font-medium">Tax%</th>
-                    <th className="p-2 text-xs font-medium">Tax</th>
                     <th className="p-2 text-xs font-medium"></th>
                   </tr>
                 </thead>
@@ -150,9 +148,9 @@ export function Cart({
                       <td className="p-2 text-sm">{item.price.toFixed(2)}</td>
                       <td className="p-2">
                         <div className="flex items-center gap-1">
-                          <Input className="w-12 h-6 text-xs" defaultValue="0" />
+                          <Input className="w-14 h-6 text-xs" defaultValue="0" />
                           <Select defaultValue="%">
-                            <SelectTrigger className="w-8 h-6 text-xs">
+                            <SelectTrigger className="w-15 h-6 text-xs">
                               <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
@@ -163,8 +161,6 @@ export function Cart({
                         </div>
                       </td>
                       <td className="p-2 font-medium text-sm">{item.total.toFixed(2)}</td>
-                      <td className="p-2 text-sm">0</td>
-                      <td className="p-2 text-sm">0.00</td>
                       <td className="p-2">
                         <Button
                           size="sm"
