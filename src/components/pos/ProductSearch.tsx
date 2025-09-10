@@ -47,25 +47,25 @@ export function ProductSearch({ products, onAddToCart }: ProductSearchProps) {
           />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-96 overflow-y-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 max-h-[600px] overflow-y-auto">
           {filteredProducts.map((product) => (
-            <Card key={product.id} className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => onAddToCart(product)}>
-              <CardContent className="p-4">
-                <div className="flex justify-between items-start mb-2">
-                  <h4 className="font-medium text-sm">{product.name}</h4>
-                  <Badge variant={product.stock > 10 ? "default" : product.stock > 0 ? "secondary" : "destructive"}>
-                    {product.stock}
-                  </Badge>
+            <div key={product.id} className="bg-white border rounded-lg p-3 cursor-pointer hover:shadow-md transition-shadow" onClick={() => onAddToCart(product)}>
+              <div className="flex justify-between items-start mb-2">
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-1">
+                    <Badge variant={product.stock > 10 ? "default" : product.stock > 0 ? "secondary" : "destructive"} className="text-xs px-1 py-0">
+                      QTY: {product.stock}
+                    </Badge>
+                  </div>
+                  <h4 className="font-medium text-sm mb-1">{product.name}</h4>
+                  <p className="text-xs text-muted-foreground mb-1">Price: {product.price}</p>
+                  <p className="text-xs text-muted-foreground">SKU: {product.barcode}</p>
                 </div>
-                <p className="text-xs text-muted-foreground mb-2">{product.category}</p>
-                <div className="flex justify-between items-center">
-                  <span className="font-bold text-lg">${product.price}</span>
-                  <Button size="sm" disabled={product.stock === 0}>
-                    <Plus className="w-4 h-4" />
-                  </Button>
+                <div className="w-12 h-12 bg-gray-100 rounded flex items-center justify-center">
+                  <div className="w-8 h-8 bg-gray-200 rounded"></div>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           ))}
         </div>
       </CardContent>

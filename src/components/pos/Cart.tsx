@@ -71,53 +71,115 @@ export function Cart({
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        {/* Customer Selection */}
-        <div>
-          <Label htmlFor="customer">Customer</Label>
-          <Select value={selectedCustomer} onValueChange={onCustomerChange}>
-            <SelectTrigger>
-              <SelectValue placeholder="Select customer" />
-            </SelectTrigger>
-            <SelectContent>
-              {customers.map((customer) => (
-                <SelectItem key={customer.id} value={customer.id}>
-                  <div className="flex items-center gap-2">
-                    <User className="w-4 h-4" />
+        {/* Customer and Date Section */}
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <Label className="text-sm font-medium">* Customer</Label>
+            <Select value={selectedCustomer} onValueChange={onCustomerChange}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select customer" />
+              </SelectTrigger>
+              <SelectContent>
+                {customers.map((customer) => (
+                  <SelectItem key={customer.id} value={customer.id}>
                     {customer.name}
-                  </div>
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div>
+            <Label className="text-sm font-medium">* Date</Label>
+            <Input type="date" defaultValue={new Date().toISOString().split('T')[0]} />
+          </div>
         </div>
 
         <Separator />
 
-        {/* Cart Items */}
-        <div className="space-y-3 max-h-64 overflow-y-auto">
+        {/* Order Table */}
+        <div className="space-y-3">
           {cart.length === 0 ? (
             <p className="text-center text-muted-foreground py-8">Cart is empty</p>
           ) : (
-            cart.map((item) => (
-              <div key={item.id} className="flex items-center justify-between p-2 border rounded">
-                <div className="flex-1">
-                  <p className="font-medium text-sm">{item.name}</p>
-                  <p className="text-xs text-muted-foreground">${item.price} each</p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Button size="sm" variant="outline" onClick={() => onUpdateQuantity(item.id, item.quantity - 1)}>
-                    <Minus className="w-3 h-3" />
-                  </Button>
-                  <span className="w-8 text-center">{item.quantity}</span>
-                  <Button size="sm" variant="outline" onClick={() => onUpdateQuantity(item.id, item.quantity + 1)}>
-                    <Plus className="w-3 h-3" />
-                  </Button>
-                  <Button size="sm" variant="destructive" onClick={() => onRemoveFromCart(item.id)}>
-                    <Trash2 className="w-3 h-3" />
-                  </Button>
-                </div>
-              </div>
-            ))
+            <div className="border rounded-lg overflow-hidden">
+              <table className="w-full">
+                <thead className="bg-gray-50">
+                  <tr className="text-left">
+                    <th className="p-2 text-xs font-medium">SL</th>
+                    <th className="p-2 text-xs font-medium">Product</th>
+                    <th className="p-2 text-xs font-medium">Quantity</th>
+                    <th className="p-2 text-xs font-medium">Price</th>
+                    <th className="p-2 text-xs font-medium">Discount</th>
+                    <th className="p-2 text-xs font-medium">Amount</th>
+                    <th className="p-2 text-xs font-medium">Tax%</th>
+                    <th className="p-2 text-xs font-medium">Tax</th>
+                    <th className="p-2 text-xs font-medium"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {cart.map((item, index) => (
+                    <tr key={item.id} className="border-t">
+                      <td className="p-2 text-sm">{index + 1}</td>
+                      <td className="p-2">
+                        <div>
+                          <div className="font-medium text-sm">{item.name}</div>
+                          <div className="text-xs text-muted-foreground">Stock: 100</div>
+                        </div>
+                      </td>
+                      <td className="p-2">
+                        <div className="flex items-center gap-1">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="h-6 w-6 p-0"
+                            onClick={() => onUpdateQuantity(item.id, item.quantity - 1)}
+                          >
+                            -
+                          </Button>
+                          <span className="w-8 text-center text-sm">{item.quantity}</span>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="h-6 w-6 p-0"
+                            onClick={() => onUpdateQuantity(item.id, item.quantity + 1)}
+                          >
+                            +
+                          </Button>
+                        </div>
+                      </td>
+                      <td className="p-2 text-sm">{item.price.toFixed(2)}</td>
+                      <td className="p-2">
+                        <div className="flex items-center gap-1">
+                          <Input className="w-12 h-6 text-xs" defaultValue="0" />
+                          <Select defaultValue="%">
+                            <SelectTrigger className="w-8 h-6 text-xs">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="%">%</SelectItem>
+                              <SelectItem value="R">R</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </td>
+                      <td className="p-2 font-medium text-sm">{item.total.toFixed(2)}</td>
+                      <td className="p-2 text-sm">0</td>
+                      <td className="p-2 text-sm">0.00</td>
+                      <td className="p-2">
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="h-6 w-6 p-0 text-red-500"
+                          onClick={() => onRemoveFromCart(item.id)}
+                        >
+                          ×
+                        </Button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )}
         </div>
 
