@@ -1,40 +1,68 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Separator } from "@/components/ui/separator"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Label } from "@/components/ui/label"
-import { Input } from "@/components/ui/input"
-import { Plus, Minus, Trash2, ShoppingCart, User, DollarSign, CreditCard, Receipt } from "lucide-react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { toast } from "@/hooks/use-toast";
+import {
+  Plus,
+  Minus,
+  Trash2,
+  ShoppingCart,
+  User,
+  DollarSign,
+  CreditCard,
+  Receipt,
+  Search,
+  X,
+} from "lucide-react";
 
 interface CartItem {
-  id: string
-  name: string
-  price: number
-  quantity: number
-  total: number
+  id: string;
+  name: string;
+  price: number;
+  quantity: number;
+  total: number;
 }
 
-interface Customer {
-  id: string
-  name: string
-  email: string
-  phone: string
+export interface Customer {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  isWalkIn?: boolean;
 }
 
 interface CartProps {
-  cart: CartItem[]
-  customers: Customer[]
-  selectedCustomer: string
-  paymentMethod: string
-  cashAmount: string
-  onUpdateQuantity: (id: string, quantity: number) => void
-  onRemoveFromCart: (id: string) => void
-  onClearCart: () => void
-  onCustomerChange: (customerId: string) => void
-  onPaymentMethodChange: (method: string) => void
-  onCashAmountChange: (amount: string) => void
-  onProcessPayment: () => void
+  cart: CartItem[];
+  customers: Customer[];
+  selectedCustomer: Customer | null;
+  paymentMethod: string;
+  cashAmount: string;
+  onUpdateQuantity: (id: string, quantity: number) => void;
+  onRemoveFromCart: (id: string) => void;
+  onClearCart: () => void;
+  onCustomerChange: (customer: Customer | null) => void;
+  onPaymentMethodChange: (method: string) => void;
+  onCashAmountChange: (amount: string) => void;
+  onProcessPayment: () => void;
+  onAddCustomer: (customer: Omit<Customer, "id">) => Promise<Customer>;
 }
 
 export function Cart({
@@ -49,11 +77,12 @@ export function Cart({
   onCustomerChange,
   onPaymentMethodChange,
   onCashAmountChange,
-  onProcessPayment
+  onProcessPayment,
+  onAddCustomer,
 }: CartProps) {
-  const subtotal = cart.reduce((sum, item) => sum + item.total, 0)
-  const tax = subtotal * 0.1 // 10% tax
-  const total = subtotal + tax
+  const subtotal = cart.reduce((sum, item) => sum + item.total, 0);
+  const tax = subtotal * 0.1; // 10% tax
+  const total = subtotal + tax;
 
   return (
     <Card>
@@ -72,25 +101,87 @@ export function Cart({
       </CardHeader>
       <CardContent className="space-y-4">
         {/* Customer and Date Section */}
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <Label className="text-sm font-medium">* Customer</Label>
-            <Select value={selectedCustomer} onValueChange={onCustomerChange}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select customer" />
-              </SelectTrigger>
-              <SelectContent>
-                {customers.map((customer) => (
-                  <SelectItem key={customer.id} value={customer.id}>
-                    {customer.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+        <div className="grid  grid-cols-3 gap-10">
+          <div className="col-span-2">
+            <Label className="text-sm font-medium">Customer</Label>
+            <div className="flex flex-col gap-2">
+              <div className="flex gap-2 items-center">
+                <div className="relative flex-1">
+                  <Search className="absolute left-2.5 top-3 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    type="search"
+                    placeholder="Search customers..."
+                    className="pl-8"
+                  />
+                </div>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button variant="outline" size="sm" className="gap-1">
+                      <Plus className="h-4 w-4" /> Add
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Add New Customer</DialogTitle>
+                    </DialogHeader>
+                    <div className="grid gap-4 py-4">
+                      <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="name" className="text-right">
+                          Name *
+                        </Label>
+                        <Input
+                          id="name"
+                          className="col-span-3"
+                          placeholder="John Doe"
+                        />
+                      </div>
+                      <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="email" className="text-right">
+                          Email
+                        </Label>
+                        <Input
+                          id="email"
+                          type="email"
+                          className="col-span-3"
+                          placeholder="john@example.com"
+                        />
+                      </div>
+                      <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="phone" className="text-right">
+                          Phone
+                        </Label>
+                        <Input
+                          id="phone"
+                          className="col-span-3"
+                          placeholder="+1234567890"
+                        />
+                      </div>
+                    </div>
+                    <DialogFooter>
+                      <Button type="submit">Add Customer</Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+                <Button
+                  variant={selectedCustomer?.isWalkIn ? "default" : "outline"}
+                  size="sm"
+                  className="gap-1"
+                >
+                  <User className="h-4 w-4" />
+                  Walk-in
+                </Button>
+              </div>
+            </div>
           </div>
-          <div>
-            <Label className="text-sm font-medium">* Date</Label>
-            <Input type="date" defaultValue={new Date().toISOString().split('T')[0]} />
+
+          <div className="col-span-1">
+            <div className="w-[70%] ml-auto">
+              <Label className="text-sm font-medium">Date</Label>
+              <Input
+                type="date"
+                defaultValue={new Date().toISOString().split("T")[0]}
+              />
+            </div>
           </div>
         </div>
 
@@ -99,7 +190,9 @@ export function Cart({
         {/* Order Table */}
         <div className="space-y-3">
           {cart.length === 0 ? (
-            <p className="text-center text-muted-foreground py-8">Cart is empty</p>
+            <p className="text-center text-muted-foreground py-8">
+              Cart is empty
+            </p>
           ) : (
             <div className="border rounded-lg overflow-hidden">
               <table className="w-full">
@@ -121,7 +214,9 @@ export function Cart({
                       <td className="p-2">
                         <div>
                           <div className="font-medium text-sm">{item.name}</div>
-                          <div className="text-xs text-muted-foreground">Stock: 100</div>
+                          <div className="text-xs text-muted-foreground">
+                            Stock: 100
+                          </div>
                         </div>
                       </td>
                       <td className="p-2">
@@ -130,16 +225,22 @@ export function Cart({
                             size="sm"
                             variant="outline"
                             className="h-6 w-6 p-0"
-                            onClick={() => onUpdateQuantity(item.id, item.quantity - 1)}
+                            onClick={() =>
+                              onUpdateQuantity(item.id, item.quantity - 1)
+                            }
                           >
                             -
                           </Button>
-                          <span className="w-8 text-center text-sm">{item.quantity}</span>
+                          <span className="w-8 text-center text-sm">
+                            {item.quantity}
+                          </span>
                           <Button
                             size="sm"
                             variant="outline"
                             className="h-6 w-6 p-0"
-                            onClick={() => onUpdateQuantity(item.id, item.quantity + 1)}
+                            onClick={() =>
+                              onUpdateQuantity(item.id, item.quantity + 1)
+                            }
                           >
                             +
                           </Button>
@@ -148,7 +249,10 @@ export function Cart({
                       <td className="p-2 text-sm">{item.price.toFixed(2)}</td>
                       <td className="p-2">
                         <div className="flex items-center gap-1">
-                          <Input className="w-14 h-6 text-xs" defaultValue="0" />
+                          <Input
+                            className="w-14 h-6 text-xs"
+                            defaultValue="0"
+                          />
                           <Select defaultValue="%">
                             <SelectTrigger className="w-15 h-6 text-xs">
                               <SelectValue />
@@ -160,7 +264,9 @@ export function Cart({
                           </Select>
                         </div>
                       </td>
-                      <td className="p-2 font-medium text-sm">{item.total.toFixed(2)}</td>
+                      <td className="p-2 font-medium text-sm">
+                        {item.total.toFixed(2)}
+                      </td>
                       <td className="p-2">
                         <Button
                           size="sm"
@@ -240,8 +346,8 @@ export function Cart({
             </div>
           )}
 
-          <Button 
-            onClick={onProcessPayment} 
+          <Button
+            onClick={onProcessPayment}
             disabled={cart.length === 0 || !paymentMethod}
             className="w-full"
             size="lg"
@@ -252,5 +358,5 @@ export function Cart({
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

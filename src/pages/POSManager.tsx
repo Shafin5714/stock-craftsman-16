@@ -1,9 +1,11 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { toast } from "@/hooks/use-toast"
-import { Clock, CheckCircle } from "lucide-react"
+import { Clock, CheckCircle, Search, Plus, User } from "lucide-react"
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+import { Label } from "@/components/ui/label"
 
 // Components
 import { ProductSearch } from "@/components/pos/ProductSearch"
@@ -26,7 +28,7 @@ const mockProducts = [
 const mockCustomers = [
   { id: "1", name: "John Doe", email: "john@example.com", phone: "+1234567890" },
   { id: "2", name: "Jane Smith", email: "jane@example.com", phone: "+1987654321" },
-  { id: "3", name: "Walk-in Customer", email: "", phone: "" }
+  { id: "3", name: "Walk-in Customer", email: "", phone: "", isWalkIn: true }
 ]
 
 const mockTransactions = [
@@ -58,9 +60,18 @@ interface CartItem {
   total: number
 }
 
+interface Customer {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  isWalkIn?: boolean;
+}
+
 export default function POSManager() {  
   const [cart, setCart] = useState<CartItem[]>([])
-  const [selectedCustomer, setSelectedCustomer] = useState<string>("")
+  const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null)
+  const [customers, setCustomers] = useState<Customer[]>(mockCustomers)
   const [paymentMethod, setPaymentMethod] = useState<string>("")
   const [cashAmount, setCashAmount] = useState("")
   const [activeTab, setActiveTab] = useState("pos")
@@ -132,6 +143,15 @@ export default function POSManager() {
       return
     }
 
+    if (!selectedCustomer) {
+      toast({
+        title: "Customer Required",
+        description: "Please select a customer or choose Walk-in Customer",
+        variant: "destructive"
+      })
+      return
+    }
+
     if (!paymentMethod) {
       toast({
         title: "Payment Method Required",
@@ -158,14 +178,27 @@ export default function POSManager() {
 
     // Clear cart and reset form
     setCart([])
-    setSelectedCustomer("")
+    setSelectedCustomer(null)
     setPaymentMethod("")
     setCashAmount("")
   }
 
   const clearCart = () => {
     setCart([])
+    setSelectedCustomer(null)
   }
+
+  const handleAddCustomer = async (customerData: Omit<Customer, 'id'>) => {
+    const newCustomer = {
+      ...customerData,
+      id: Date.now().toString(),
+    };
+    
+    setCustomers(prev => [...prev, newCustomer]);
+    setSelectedCustomer(newCustomer);
+    
+    return newCustomer;
+  };
 
   return (
     <div className="space-y-6">
@@ -198,7 +231,7 @@ export default function POSManager() {
             <div className="space-y-4">
               <Cart
                 cart={cart}
-                customers={mockCustomers}
+                customers={customers}
                 selectedCustomer={selectedCustomer}
                 paymentMethod={paymentMethod}
                 cashAmount={cashAmount}
@@ -209,6 +242,7 @@ export default function POSManager() {
                 onPaymentMethodChange={setPaymentMethod}
                 onCashAmountChange={setCashAmount}
                 onProcessPayment={processPayment}
+                onAddCustomer={handleAddCustomer}
               />
             </div>
           </div>
