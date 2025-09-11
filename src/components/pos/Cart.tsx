@@ -34,6 +34,7 @@ import {
   X,
   CheckIcon,
   ChevronsUpDownIcon,
+  SquarePen,
 } from "lucide-react";
 
 import {
@@ -123,9 +124,13 @@ export function Cart({
   onAddCustomer,
 }: CartProps) {
   const subtotal = cart.reduce((sum, item) => sum + item.total, 0);
-  const discountAmount = overallDiscount ? (subtotal * parseFloat(overallDiscount)) / 100 : 0;
+  const discountAmount = overallDiscount
+    ? (subtotal * parseFloat(overallDiscount)) / 100
+    : 0;
   const discountedSubtotal = subtotal - discountAmount;
-  const tax = overallTax ? (discountedSubtotal * parseFloat(overallTax)) / 100 : 0;
+  const tax = overallTax
+    ? (discountedSubtotal * parseFloat(overallTax)) / 100
+    : 0;
   const total = discountedSubtotal + tax;
 
   const [open, setOpen] = useState(false);
@@ -137,6 +142,11 @@ export function Cart({
     address: "",
   });
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [isDiscountDialogOpen, setIsDiscountDialogOpen] = useState(false);
+  const [discountType, setDiscountType] = useState("Percentage");
+  const [discountValue, setDiscountValue] = useState("");
+  const [isTaxDialogOpen, setIsTaxDialogOpen] = useState(false);
+  const [taxPercentage, setTaxPercentage] = useState("");
 
   const handleAddCustomer = () => {};
 
@@ -418,32 +428,137 @@ export function Cart({
         <Separator />
 
         {/* Overall Discount and Tax */}
-        <div className="grid grid-cols-2 gap-3">
+        <div className="flex gap-5">
           <div>
-            <Label htmlFor="overall-discount">Overall Discount (%)</Label>
-            <Input
-              id="overall-discount"
-              type="number"
-              placeholder="0"
-              value={overallDiscount}
-              onChange={(e) => onOverallDiscountChange(e.target.value)}
-              min="0"
-              max="100"
-              step="0.01"
-            />
+            <Dialog
+              open={isDiscountDialogOpen}
+              onOpenChange={setIsDiscountDialogOpen}
+            >
+              <DialogTrigger asChild>
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start p-0 h-auto text-left"
+                >
+                  <div className="flex items-center gap-2 text-sm">
+                    <span>Discount</span>
+                    <span className="text-blue-500">
+                      <SquarePen />
+                    </span>
+                    <span className="ml-auto font-medium">
+                      {overallDiscount || "0.00"}
+                    </span>
+                  </div>
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Order Discount</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="discount-type">Order Discount Type</Label>
+                      <Select
+                        value={discountType}
+                        onValueChange={setDiscountType}
+                      >
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Flat">Flat</SelectItem>
+                          <SelectItem value="Percentage">Percentage</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div>
+                      <Label htmlFor="discount-value">Value</Label>
+                      <Input
+                        id="discount-value"
+                        type="number"
+                        placeholder="0"
+                        value={discountValue}
+                        onChange={(e) => setDiscountValue(e.target.value)}
+                        min="0"
+                        step="0.01"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <DialogFooter>
+                  <Button
+                    variant="outline"
+                    onClick={() => setIsDiscountDialogOpen(false)}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      onOverallDiscountChange(discountValue);
+                      setIsDiscountDialogOpen(false);
+                    }}
+                  >
+                    Apply
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
           </div>
           <div>
-            <Label htmlFor="overall-tax">Overall Tax (%)</Label>
-            <Input
-              id="overall-tax"
-              type="number"
-              placeholder="0"
-              value={overallTax}
-              onChange={(e) => onOverallTaxChange(e.target.value)}
-              min="0"
-              max="100"
-              step="0.01"
-            />
+            <Dialog open={isTaxDialogOpen} onOpenChange={setIsTaxDialogOpen}>
+              <DialogTrigger asChild>
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start p-0 h-auto text-left"
+                >
+                  <div className="flex items-center gap-2 text-sm">
+                    <span>Tax</span>
+                    <span className="text-blue-500">
+                      <SquarePen />
+                    </span>
+                    <span className="ml-auto font-medium">
+                      {overallTax || "0.00"} %
+                    </span>
+                  </div>
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Tax Settings</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4">
+                  <div>
+                    <Label htmlFor="tax-percentage">Tax Percentage (%)</Label>
+                    <Input
+                      id="tax-percentage"
+                      type="number"
+                      placeholder="0"
+                      value={taxPercentage}
+                      onChange={(e) => setTaxPercentage(e.target.value)}
+                      min="0"
+                      max="100"
+                      step="0.01"
+                    />
+                  </div>
+                </div>
+                <DialogFooter>
+                  <Button
+                    variant="outline"
+                    onClick={() => setIsTaxDialogOpen(false)}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      onOverallTaxChange(taxPercentage);
+                      setIsTaxDialogOpen(false);
+                    }}
+                  >
+                    Apply
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
           </div>
         </div>
 
