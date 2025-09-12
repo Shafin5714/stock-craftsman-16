@@ -10,7 +10,6 @@ import {
   Settings,
   FolderTree,
   Calculator,
-  UserCog,
 } from "lucide-react";
 
 import {
@@ -92,14 +91,6 @@ export function AppSidebar() {
         <SidebarGroup className="mt-auto">
           <SidebarGroupContent>
             <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild>
-                  <NavLink to="/user-management" className={getNavCls("/user-management")}>
-                    <UserCog className="h-4 w-4" />
-                    {!isCollapsed && <span>User Management</span>}
-                  </NavLink>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
                   <NavLink to="/settings" className={getNavCls("/settings")}>

@@ -33,7 +33,6 @@ import ViewInvoice from "./pages/ViewInvoice";
 import PaymentHistory from "./pages/PaymentHistory";
 import SendReminder from "./pages/SendReminder";
 import GenerateStatement from "./pages/GenerateStatement";
-import UserManagement from "./pages/UserManagement";
 
 const queryClient = new QueryClient();
 
@@ -72,7 +71,6 @@ const App = () => (
           <Route path="/generate-statement/:supplierId?" element={<DashboardLayout><GenerateStatement /></DashboardLayout>} />
           <Route path="/reports" element={<DashboardLayout><Reports /></DashboardLayout>} />
           <Route path="/settings" element={<DashboardLayout><Settings /></DashboardLayout>} />
-          <Route path="/user-management" element={<DashboardLayout><UserManagement /></DashboardLayout>} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
