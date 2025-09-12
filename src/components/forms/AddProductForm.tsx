@@ -38,6 +38,8 @@ export function AddProductForm({
     sku: "",
     category: "",
     subCategory: "",
+    brand: "",
+    origin: "",
     unit: "pcs",
     costPrice: "",
     sellingPrice: "",
@@ -106,6 +108,8 @@ export function AddProductForm({
         sku: "",
         category: "",
         subCategory: "",
+        brand: "",
+        origin: "",
         unit: "pcs",
         costPrice: "",
         sellingPrice: "",
@@ -271,6 +275,50 @@ export function AddProductForm({
                     }
                     placeholder="Enter sub category"
                   />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="brand">Brand</Label>
+                  <Select
+                    value={formData.brand}
+                    onValueChange={(value) =>
+                      handleInputChange("brand", value)
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select brand" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="samsung">Samsung</SelectItem>
+                      <SelectItem value="toyota">Toyota</SelectItem>
+                      <SelectItem value="lg">LG</SelectItem>
+                      <SelectItem value="apple">Apple</SelectItem>
+                      <SelectItem value="other">Other</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="origin">Origin</Label>
+                  <Select
+                    value={formData.origin}
+                    onValueChange={(value) =>
+                      handleInputChange("origin", value)
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select origin" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="china">China</SelectItem>
+                      <SelectItem value="germany">Germany</SelectItem>
+                      <SelectItem value="local-factory">Local Factory</SelectItem>
+                      <SelectItem value="japan">Japan</SelectItem>
+                      <SelectItem value="usa">USA</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
 

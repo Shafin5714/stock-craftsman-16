@@ -34,6 +34,8 @@ import PaymentHistory from "./pages/PaymentHistory";
 import SendReminder from "./pages/SendReminder";
 import GenerateStatement from "./pages/GenerateStatement";
 import UserManagement from "./pages/UserManagement";
+import Brands from "./pages/Brands";
+import Origins from "./pages/Origins";
 
 const queryClient = new QueryClient();
 
@@ -73,6 +75,8 @@ const App = () => (
           <Route path="/reports" element={<DashboardLayout><Reports /></DashboardLayout>} />
           <Route path="/settings" element={<DashboardLayout><Settings /></DashboardLayout>} />
           <Route path="/user-management" element={<DashboardLayout><UserManagement /></DashboardLayout>} />
+          <Route path="/brands" element={<DashboardLayout><Brands /></DashboardLayout>} />
+          <Route path="/origins" element={<DashboardLayout><Origins /></DashboardLayout>} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

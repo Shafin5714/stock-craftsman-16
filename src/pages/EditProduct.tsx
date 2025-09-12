@@ -25,6 +25,7 @@ export default function EditProduct() {
     category: "Electronics",
     subCategory: "Laptops",
     brand: "TechCorp",
+    origin: "china",
     unit: "pcs",
     costPrice: "850",
     sellingPrice: "1200",
@@ -258,12 +259,40 @@ export default function EditProduct() {
                   </div>
                   <div>
                     <Label htmlFor="brand">Brand</Label>
-                    <Input
-                      id="brand"
+                    <Select
                       value={formData.brand}
-                      onChange={(e) => handleInputChange("brand", e.target.value)}
-                      placeholder="Enter brand"
-                    />
+                      onValueChange={(value) => handleInputChange("brand", value)}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select brand" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="samsung">Samsung</SelectItem>
+                        <SelectItem value="toyota">Toyota</SelectItem>
+                        <SelectItem value="lg">LG</SelectItem>
+                        <SelectItem value="apple">Apple</SelectItem>
+                        <SelectItem value="techcorp">TechCorp</SelectItem>
+                        <SelectItem value="other">Other</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <Label htmlFor="origin">Origin</Label>
+                    <Select
+                      value={formData.origin}
+                      onValueChange={(value) => handleInputChange("origin", value)}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select origin" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="china">China</SelectItem>
+                        <SelectItem value="germany">Germany</SelectItem>
+                        <SelectItem value="local-factory">Local Factory</SelectItem>
+                        <SelectItem value="japan">Japan</SelectItem>
+                        <SelectItem value="usa">USA</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                   <div>
                     <Label htmlFor="barcode">Barcode</Label>
