@@ -17,8 +17,6 @@ export default function EditProduct() {
 
   const [selectedImage, setSelectedImage] = useState<File | null>(null)
   const [imagePreview, setImagePreview] = useState<string>("")
-  const [selectedImage, setSelectedImage] = useState<File | null>(null)
-  const [imagePreview, setImagePreview] = useState<string>("")
   // Mock product data - in real app, fetch by ID
   const [formData, setFormData] = useState({
     name: "Business Laptop Model X",
@@ -42,43 +40,8 @@ export default function EditProduct() {
     width: "25.1",
     height: "1.8",
     currentImage: "https://images.pexels.com/photos/205421/pexels-photo-205421.jpeg?auto=compress&cs=tinysrgb&w=400"
-    currentImage: "https://images.pexels.com/photos/205421/pexels-photo-205421.jpeg?auto=compress&cs=tinysrgb&w=400"
   })
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (file) {
-      if (file.size > 5 * 1024 * 1024) { // 5MB limit
-        toast({
-          title: "Image too large",
-          description: "Please select an image smaller than 5MB.",
-          variant: "destructive"
-        })
-        return
-      }
-      
-      if (!file.type.startsWith('image/')) {
-        toast({
-          title: "Invalid file type",
-          description: "Please select a valid image file.",
-          variant: "destructive"
-        })
-        return
-      }
-      
-      setSelectedImage(file)
-      const reader = new FileReader()
-      reader.onload = (e) => {
-        setImagePreview(e.target?.result as string)
-      }
-      reader.readAsDataURL(file)
-    }
-  }
-
-  const removeImage = () => {
-    setSelectedImage(null)
-    setImagePreview("")
-  }
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
@@ -188,81 +151,6 @@ export default function EditProduct() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Main Information */}
           <div className="lg:col-span-2 space-y-6">
-            {/* Product Image */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Image className="w-5 h-5" />
-                  Product Image
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {/* Current Image */}
-                  <div>
-                    <Label>Current Image</Label>
-                    <div className="mt-2">
-                      <img 
-                        src={formData.currentImage} 
-                        alt={formData.name}
-                        className="w-full h-48 object-cover rounded-lg border"
-                        onError={(e) => {
-                          e.currentTarget.src = "https://images.pexels.com/photos/4158/apple-iphone-smartphone-desk.jpg?auto=compress&cs=tinysrgb&w=400"
-                        }}
-                      />
-                    </div>
-                  </div>
-                  
-                  {/* New Image Upload */}
-                  <div>
-                    <Label>Upload New Image</Label>
-                    <div className="mt-2">
-                      {imagePreview ? (
-                        <div className="relative">
-                          <img 
-                            src={imagePreview} 
-                            alt="New product preview" 
-                            className="w-full h-48 object-cover rounded-lg border"
-                          />
-                          <Button
-                            type="button"
-                            variant="destructive"
-                            size="icon"
-                            className="absolute top-2 right-2 h-6 w-6"
-                            onClick={removeImage}
-                          >
-                            <X className="h-3 w-3" />
-                          </Button>
-                        </div>
-                      ) : (
-                        <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-6 text-center h-48 flex flex-col justify-center">
-                          <Image className="mx-auto h-8 w-8 text-muted-foreground/50 mb-2" />
-                          <p className="text-sm text-muted-foreground mb-2">Upload new image</p>
-                          <input
-                            type="file"
-                            accept="image/*"
-                            onChange={handleImageUpload}
-                            className="hidden"
-                            id="image-upload"
-                          />
-                          <Label htmlFor="image-upload" className="cursor-pointer">
-                            <Button type="button" variant="outline" size="sm" asChild>
-                              <span>
-                                <Upload className="h-4 w-4 mr-2" />
-                                Choose Image
-                              </span>
-                            </Button>
-                          </Label>
-                          <p className="text-xs text-muted-foreground mt-2">
-                            JPG, PNG, GIF up to 5MB
-                          </p>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
             {/* Product Image */}
             <Card>
               <CardHeader>

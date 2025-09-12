@@ -4,7 +4,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
-import { Card, CardContent } from "@/components/ui/card"
 import {
   Select,
   SelectContent,
@@ -19,7 +18,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-import { Upload, X, Image } from "lucide-react"
 } from "@/components/ui/dialog";
 import { toast } from "@/components/ui/sonner";
 import { Upload, X, Image } from "lucide-react";
@@ -44,8 +42,6 @@ export function AddProductForm({
     costPrice: "",
     sellingPrice: "",
     minStock: "",
-  const [selectedImage, setSelectedImage] = useState<File | null>(null)
-  const [imagePreview, setImagePreview] = useState<string>("")
     maxStock: "",
     currentStock: "",
     supplier: "",
@@ -86,36 +82,6 @@ export function AddProductForm({
   const removeImage = () => {
     setSelectedImage(null);
     setImagePreview("");
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (file) {
-      if (file.size > 5 * 1024 * 1024) { // 5MB limit
-        toast.error("Image too large", {
-          description: "Please select an image smaller than 5MB."
-        })
-        return
-      }
-      
-      if (!file.type.startsWith('image/')) {
-        toast.error("Invalid file type", {
-          description: "Please select a valid image file."
-        })
-        return
-      }
-      
-      setSelectedImage(file)
-      const reader = new FileReader()
-      reader.onload = (e) => {
-        setImagePreview(e.target?.result as string)
-      }
-      reader.readAsDataURL(file)
-    }
-  }
-
-  const removeImage = () => {
-    setSelectedImage(null)
-    setImagePreview("")
-  }
   };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -125,11 +91,6 @@ export function AddProductForm({
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      // In a real app, you would upload the image to a storage service
-      if (selectedImage) {
-        console.log("Uploading image:", selectedImage.name)
-      }
-      
       // In a real app, you would upload the image to a storage service
       if (selectedImage) {
         console.log("Uploading image:", selectedImage.name);
@@ -153,8 +114,6 @@ export function AddProductForm({
         currentStock: "",
         supplier: "",
         description: "",
-      setSelectedImage(null)
-      setImagePreview("")
       });
       setSelectedImage(null);
       setImagePreview("");
@@ -186,59 +145,6 @@ export function AddProductForm({
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-            {/* Product Image */}
-            <div className="space-y-4">
-              <Label>Product Image</Label>
-              <Card>
-                <CardContent className="p-4">
-                  {imagePreview ? (
-                    <div className="relative">
-                      <img 
-                        src={imagePreview} 
-                        alt="Product preview" 
-                        className="w-full h-48 object-cover rounded-lg"
-                      />
-                      <Button
-                        type="button"
-                        variant="destructive"
-                        size="icon"
-                        className="absolute top-2 right-2 h-6 w-6"
-                        onClick={removeImage}
-                      >
-                        <X className="h-3 w-3" />
-                      </Button>
-                    </div>
-                  ) : (
-                    <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-6 text-center">
-                      <Image className="mx-auto h-12 w-12 text-muted-foreground/50 mb-2" />
-                      <p className="text-sm text-muted-foreground mb-2">Upload product image</p>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleImageUpload}
-                        className="hidden"
-                        id="image-upload"
-                      />
-                      <Label htmlFor="image-upload" className="cursor-pointer">
-                        <Button type="button" variant="outline" size="sm" asChild>
-                          <span>
-                            <Upload className="h-4 w-4 mr-2" />
-                            Choose Image
-                          </span>
-                        </Button>
-                      </Label>
-                      <p className="text-xs text-muted-foreground mt-2">
-                        JPG, PNG, GIF up to 5MB
-                      </p>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Product Information */}
-            <div className="lg:col-span-3 space-y-4">
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
             {/* Product Image */}
             <div className="space-y-4">
@@ -500,8 +406,6 @@ export function AddProductForm({
                   rows={3}
                 />
               </div>
-            </div>
-          </div>
             </div>
           </div>
 

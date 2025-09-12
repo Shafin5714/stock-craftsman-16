@@ -9,10 +9,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { toast } from "@/hooks/use-toast"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { Label } from "@/components/ui/label"
-import { Input } from "@/components/ui/input"
-import { toast } from "@/hooks/use-toast"
 import { 
   ArrowLeft, 
   Edit, 
@@ -30,10 +26,6 @@ import {
   X,
   Image,
   Camera
-  Upload,
-  X,
-  Image,
-  Camera
 } from "lucide-react"
 import {
   Table,
@@ -47,10 +39,6 @@ import {
 export default function ProductDetails() {
   const { id } = useParams()
   const navigate = useNavigate()
-  const [selectedImage, setSelectedImage] = useState<File | null>(null)
-  const [imagePreview, setImagePreview] = useState<string>("")
-  const [isImageDialogOpen, setIsImageDialogOpen] = useState(false)
-  const [isUploading, setIsUploading] = useState(false)
   const [selectedImage, setSelectedImage] = useState<File | null>(null)
   const [imagePreview, setImagePreview] = useState<string>("")
   const [isImageDialogOpen, setIsImageDialogOpen] = useState(false)
@@ -81,7 +69,6 @@ export default function ProductDetails() {
     weight: "2.5 kg",
     dimensions: "35.6 x 25.1 x 1.8 cm",
     image: "https://images.pexels.com/photos/205421/pexels-photo-205421.jpeg?auto=compress&cs=tinysrgb&w=400"
-    image: "https://images.pexels.com/photos/205421/pexels-photo-205421.jpeg?auto=compress&cs=tinysrgb&w=400"
   }
 
   const stockMovements = [
@@ -98,62 +85,6 @@ export default function ProductDetails() {
     { date: "2024-01-20", supplier: "TechSupply Co", quantity: 15, unitCost: 860, total: 12900, poNumber: "PO-2024-018" }
   ]
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (file) {
-      if (file.size > 5 * 1024 * 1024) { // 5MB limit
-        toast({
-          title: "Image too large",
-          description: "Please select an image smaller than 5MB.",
-          variant: "destructive"
-        })
-        return
-      }
-      
-      if (!file.type.startsWith('image/')) {
-        toast({
-          title: "Invalid file type",
-          description: "Please select a valid image file.",
-          variant: "destructive"
-        })
-        return
-      }
-      
-      setSelectedImage(file)
-      const reader = new FileReader()
-      reader.onload = (e) => {
-        setImagePreview(e.target?.result as string)
-      }
-      reader.readAsDataURL(file)
-    }
-  }
-
-  const handleImageSave = async () => {
-    if (!selectedImage) return
-    
-    setIsUploading(true)
-    try {
-      // Simulate API call to upload image
-      await new Promise(resolve => setTimeout(resolve, 2000))
-      
-      toast({
-        title: "Image Updated",
-        description: "Product image has been updated successfully."
-      })
-      
-      setIsImageDialogOpen(false)
-      setSelectedImage(null)
-      setImagePreview("")
-    } catch (error) {
-      toast({
-        title: "Upload Failed",
-        description: "Failed to upload image. Please try again.",
-        variant: "destructive"
-      })
-    } finally {
-      setIsUploading(false)
-    }
-  }
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
@@ -249,104 +180,6 @@ export default function ProductDetails() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Product Information */}
         <div className="lg:col-span-2 space-y-6">
-          {/* Product Image */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center justify-between">
-                <span className="flex items-center gap-2">
-                  <Image className="w-5 h-5" />
-                  Product Image
-                </span>
-                <Dialog open={isImageDialogOpen} onOpenChange={setIsImageDialogOpen}>
-                  <DialogTrigger asChild>
-                    <Button variant="outline" size="sm">
-                      <Camera className="w-4 h-4 mr-2" />
-                      Update Image
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent>
-                    <DialogHeader>
-                      <DialogTitle>Update Product Image</DialogTitle>
-                    </DialogHeader>
-                    <div className="space-y-4">
-                      {imagePreview ? (
-                        <div className="relative">
-                          <img 
-                            src={imagePreview} 
-                            alt="New product preview" 
-                            className="w-full h-64 object-cover rounded-lg"
-                          />
-                          <Button
-                            type="button"
-                            variant="destructive"
-                            size="icon"
-                            className="absolute top-2 right-2 h-6 w-6"
-                            onClick={() => {
-                              setSelectedImage(null)
-                              setImagePreview("")
-                            }}
-                          >
-                            <X className="h-3 w-3" />
-                          </Button>
-                        </div>
-                      ) : (
-                        <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-8 text-center">
-                          <Image className="mx-auto h-16 w-16 text-muted-foreground/50 mb-4" />
-                          <p className="text-sm text-muted-foreground mb-4">Upload new product image</p>
-                          <input
-                            type="file"
-                            accept="image/*"
-                            onChange={handleImageUpload}
-                            className="hidden"
-                            id="image-upload-dialog"
-                          />
-                          <Label htmlFor="image-upload-dialog" className="cursor-pointer">
-                            <Button type="button" variant="outline" asChild>
-                              <span>
-                                <Upload className="h-4 w-4 mr-2" />
-                                Choose Image
-                              </span>
-                            </Button>
-                          </Label>
-                          <p className="text-xs text-muted-foreground mt-2">
-                            JPG, PNG, GIF up to 5MB
-                          </p>
-                        </div>
-                      )}
-                      
-                      <div className="flex gap-2">
-                        <Button 
-                          onClick={handleImageSave} 
-                          disabled={!selectedImage || isUploading}
-                          className="flex-1"
-                        >
-                          {isUploading ? "Uploading..." : "Save Image"}
-                        </Button>
-                        <Button 
-                          variant="outline" 
-                          onClick={() => setIsImageDialogOpen(false)}
-                        >
-                          Cancel
-                        </Button>
-                      </div>
-                    </div>
-                  </DialogContent>
-                </Dialog>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex justify-center">
-                <img 
-                  src={product.image} 
-                  alt={product.name}
-                  className="w-full max-w-md h-64 object-cover rounded-lg border"
-                  onError={(e) => {
-                    e.currentTarget.src = "https://images.pexels.com/photos/4158/apple-iphone-smartphone-desk.jpg?auto=compress&cs=tinysrgb&w=400"
-                  }}
-                />
-              </div>
-            </CardContent>
-          </Card>
           {/* Product Image */}
           <Card>
             <CardHeader>
